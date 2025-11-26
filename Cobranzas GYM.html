@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cobranzas Alabama Fit Center</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for aesthetic */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .whatsapp-gradient {
+            background: linear-gradient(90deg, #128C7E, #25D366);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .whatsapp-gradient:hover {
+            opacity: 0.9;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+        }
+        /* Style for the instruction box */
+        .instruction-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid #4ade80;
+            padding: 12px;
+            margin-bottom: 16px;
+            border-radius: 4px;
+        }
+        .instruction-box strong {
+            color: #15803d;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8 flex items-center justify-center min-h-screen">
+
+    <div class="max-w-xl w-full bg-white p-6 sm:p-10 rounded-xl shadow-2xl border-t-8 border-[#25D366]">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2 flex items-center">
+            <svg class="w-6 h-6 mr-3 text-[#25D366]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+            Cobranzas Alabama Fit Center
+        </h1>
+        <p class="text-gray-500 mb-6">Herramienta de Contacto Rápido (Código de Uruguay: +598).</p>
+
+        <!-- DATA INPUT SECTION -->
+        <div class="instruction-box">
+            <p class="text-sm text-gray-700"><strong>Paso 1: Copia y Pega tus Datos</strong></p>
+            <p class="text-xs mt-1 text-gray-600">Pega aquí los datos de tus clientes. Cada línea debe tener el formato exacto:</p>
+            <code class="block mt-1 p-1 bg-white border border-gray-200 text-xs rounded-sm font-mono text-red-600">Nombre | Teléfono (8 dígitos) | Estado (Vencer/Vencida) | Días</code>
+            <p class="text-xs mt-1 text-gray-600">Ejemplo: Juan Pérez | 99123456 | A punto de vencer | 3</p>
+        </div>
+
+        <div>
+            <textarea id="clientDataInput" rows="4" placeholder="Pega tu lista de clientes aquí..." class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"></textarea>
+        </div>
+        
+        <button id="processDataBtn" onclick="processClientData()" class="mt-3 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Cargar y Procesar Clientes
+        </button>
+        
+        <!-- CLIENT SELECTION DROPDOWN -->
+        <div id="clientSelectionSection" class="space-y-4 mt-6 border-t pt-4 hidden">
+             <p class="text-sm font-medium text-gray-700"><strong>Paso 2: Selecciona un Cliente</strong></p>
+            <div>
+                <label for="clientSelector" class="block text-sm font-medium text-gray-700">Cliente a Contactar:</label>
+                <select id="clientSelector" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                    <option value="">--- Selecciona un Cliente ---</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- GENERATE BUTTON -->
+        <button id="generateBtn" onclick="generateWhatsAppLink()" class="mt-6 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white whatsapp-gradient focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            Generar Enlace y Mensaje
+        </button>
+
+        <!-- OUTPUT SECTION -->
+        <div id="output" class="mt-8 pt-6 border-t border-gray-200 hidden">
+            <h2 class="text-xl font-semibold text-gray-800 mb-3">Resultado:</h2>
+            
+            <!-- Link -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Enlace Directo de WhatsApp:</label>
+                <div class="mt-1 flex rounded-md shadow-sm">
+                    <input type="text" id="whatsappLink" readonly class="flex-1 min-w-0 block w-full px-3 py-2 rounded-l-md border border-gray-300 bg-gray-50 text-xs sm:text-sm">
+                    <button onclick="copyToClipboard('whatsappLink')" class="px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-r-md hover:bg-gray-700 transition duration-150">Copiar</button>
+                </div>
+                <a id="openLinkBtn" target="_blank" class="mt-2 block text-center py-2 px-4 rounded-md text-white font-semibold bg-green-500 hover:bg-green-600 transition duration-150 cursor-pointer">
+                    Abrir en WhatsApp Web
+                </a>
+            </div>
+
+            <!-- Message Preview -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Mensaje Generado (para verificar):</label>
+                <pre id="messagePreview" class="bg-gray-50 p-3 rounded-md border border-gray-200 text-xs whitespace-pre-wrap text-gray-800"></pre>
+                <button onclick="copyToClipboard('messagePreview')" class="mt-2 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Copiar Solo el Mensaje
+                </button>
+            </div>
+        </div>
+
+        <!-- Notification Message -->
+        <div id="notification" class="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg hidden">Copiado al portapapeles!</div>
+    </div>
+
+    <script>
+        // Código de área de Uruguay
+        const URUGUAY_CODE = "598"; 
+
+        // Variable global para almacenar los datos de los clientes (aunque el dropdown también los guarda)
+        let clients = []; 
+
+        /**
+         * Parsea el texto pegado en el textarea, valida el formato y carga el dropdown.
+         */
+        function processClientData() {
+            const dataInput = document.getElementById('clientDataInput').value.trim();
+            const selector = document.getElementById('clientSelector');
+            const selectionSection = document.getElementById('clientSelectionSection');
+            clients = []; // Limpiar datos anteriores
+            selector.innerHTML = '<option value="">--- Selecciona un Cliente ---</option>'; // Resetear dropdown
+            document.getElementById('output').classList.add('hidden'); // Ocultar resultados anteriores
+            selectionSection.classList.add('hidden');
+
+            if (!dataInput) {
+                alert("Por favor, pega los datos de tus clientes en el campo de texto.");
+                return;
+            }
+
+            const lines = dataInput.split('\n').filter(line => line.trim() !== '');
+            let validCount = 0;
+
+            lines.forEach((line, index) => {
+                // Formato esperado: Nombre|Telefono|Estado|Dias
+                const parts = line.split('|').map(p => p.trim());
+                
+                if (parts.length === 4) {
+                    const [name, phone, status, days] = parts;
+
+                    // 1. Normalizar Estado
+                    const normalizedStatus = status.toUpperCase().includes('VENCER') ? 'A PUNTO DE VENCER' : 
+                                             status.toUpperCase().includes('VENCIDA') ? 'VENCIDA' : 'VENCIDA';
+                    
+                    // 2. Limpiar y validar Teléfono y Días
+                    const cleanPhone = phone.replace(/[^0-9]/g, '');
+                    const cleanDays = parseInt(days) || 1;
+
+                    const client = {
+                        id: index,
+                        name: name,
+                        phone: cleanPhone,
+                        status: normalizedStatus,
+                        days: cleanDays,
+                    };
+
+                    clients.push(client);
+
+                    // 3. Añadir al dropdown (almacenando el objeto completo en el valor)
+                    const option = document.createElement('option');
+                    option.value = JSON.stringify(client); 
+                    
+                    const statusDisplay = normalizedStatus === 'A PUNTO DE VENCER' ? 'por vencer' : 'vencida';
+                    option.textContent = `${name} (${cleanDays} días ${statusDisplay})`;
+                    selector.appendChild(option);
+                    validCount++;
+
+                } else {
+                     console.warn(`Línea ${index + 1} ignorada: Formato incorrecto. Debe ser Nombre | Teléfono | Estado | Días`);
+                }
+            });
+
+            if (validCount > 0) {
+                selectionSection.classList.remove('hidden');
+                alert(`¡${validCount} clientes cargados exitosamente! Selecciona uno de la lista.`);
+            } else {
+                alert("No se pudo cargar ningún cliente. Revisa que el formato sea 'Nombre | Teléfono | Estado | Días' por cada línea.");
+            }
+        }
+
+
+        /**
+         * Genera el mensaje completo basado en la plantilla.
+         * @param {string} name - Nombre del cliente.
+         * @param {string} status - 'A PUNTO DE VENCER' o 'VENCIDA'.
+         * @param {number} days - Número de días.
+         * @returns {string} Mensaje de WhatsApp.
+         */
+        function getMessageTemplate(name, status, days) {
+            const isDue = status === 'A PUNTO DE VENCER';
+            
+            let statusText = isDue ? 'A PUNTO DE VENCER' : 'VENCIDA';
+            let daysMessage = '';
+
+            if (isDue) {
+                daysMessage = `
+🗓️ Te quedan solo ${days} días para realizar tu pago. ¡No dejes que expire tu acceso y mantén tu ritmo! 🚀`;
+            } else {
+                daysMessage = `
+🚫 Han pasado ${days} días. Tu acceso a las instalaciones se encuentra en pausa temporalmente. ¡Te esperamos para reactivarla hoy mismo y que retomes tus entrenamientos! 💪`;
+            }
+            
+            const fullMessage = `¡Hola, ${name}! 👋 Soy de Alabama Fit Center.
+
+*¡Atención a tu membresía!* 🚨
+
+Te escribimos para recordarte que tu mensualidad está ${statusText}.
+---
+${daysMessage}
+---
+
+Para continuar disfrutando de todas las instalaciones, pasa por recepción o contáctanos por este chat para gestionar tu pago.
+
+¡Gracias por ser parte del equipo de Alabama Fit Center!`;
+
+            return fullMessage.trim();
+        }
+
+        /**
+         * Genera el enlace de WhatsApp y actualiza la UI.
+         */
+        function generateWhatsAppLink() {
+            const selectedClientString = document.getElementById('clientSelector').value;
+            const outputDiv = document.getElementById('output');
+            const whatsappLinkInput = document.getElementById('whatsappLink');
+            const messagePreviewPre = document.getElementById('messagePreview');
+            const openLinkBtn = document.getElementById('openLinkBtn');
+            
+            if (!selectedClientString) {
+                alert("Por favor, selecciona un cliente de la lista desplegable.");
+                return;
+            }
+
+            // Deserializar el objeto cliente
+            const client = JSON.parse(selectedClientString);
+
+            // 1. Construir el mensaje
+            const messageText = getMessageTemplate(client.name, client.status, client.days);
+
+            // 2. Codificar el mensaje para la URL
+            const encodedMessage = encodeURIComponent(messageText);
+
+            // 3. Formato del número (ya limpio)
+            const cleanPhoneNumber = client.phone; 
+
+            // 4. Construir el enlace final
+            const fullLink = `https://wa.me/${URUGUAY_CODE}${cleanPhoneNumber}?text=${encodedMessage}`;
+
+            // 5. Actualizar la interfaz
+            whatsappLinkInput.value = fullLink;
+            messagePreviewPre.textContent = messageText;
+            openLinkBtn.href = fullLink;
+            outputDiv.classList.remove('hidden');
+        }
+
+        /**
+         * Copia el contenido de un elemento al portapapeles.
+         * @param {string} elementId - ID del input o pre que contiene el texto.
+         */
+        function copyToClipboard(elementId) {
+            let textToCopy;
+            const element = document.getElementById(elementId);
+
+            if (element.tagName === 'PRE') {
+                textToCopy = element.textContent;
+            } else { // Asume input
+                textToCopy = element.value;
+            }
+
+            // Fallback for secure copy (execCommand is recommended for cross-compatibility in iFrames)
+            const tempInput = document.createElement('textarea');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            
+            try {
+                document.execCommand('copy');
+                showNotification();
+            } catch (err) {
+                console.error('No se pudo copiar el texto: ', err);
+            }
+            document.body.removeChild(tempInput);
+        }
+
+        /**
+         * Muestra una notificación de éxito temporal.
+         */
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.remove('hidden');
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
